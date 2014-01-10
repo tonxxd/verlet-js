@@ -481,6 +481,7 @@ function VerletJS(width, height, canvas) {
 	this.canvas = canvas;
 	this.ctx = canvas.getContext("2d");
 	this.mouse = new Vec2(0,0);
+	this.drag = true;
 	this.mouseDown = false;
 	this.draggedEntity = null;
 	this.selectionRadius = 20;
@@ -489,6 +490,9 @@ function VerletJS(width, height, canvas) {
 	this.bounds = function (particle) {
 		if (particle.pos.y > this.height-1)
 			particle.pos.y = this.height-1;
+		
+		if (particle.pos.y < 0)
+			particle.pos.y = 0;
 		
 		if (particle.pos.x < 0)
 			particle.pos.x = 0;
@@ -504,24 +508,27 @@ function VerletJS(width, height, canvas) {
 		e.preventDefault();
 	};
 	
-	this.canvas.onmousedown = function(e) {
-		_this.mouseDown = true;
-		var nearest = _this.nearestEntity();
-		if (nearest) {
-			_this.draggedEntity = nearest;
-		}
-	};
+	if(_this.drag){
+		
+		this.canvas.onmousedown = function(e) {
+			_this.mouseDown = true;
+			var nearest = _this.nearestEntity();
+			if (nearest) {
+				_this.draggedEntity = nearest;
+			}
+		};
 	
-	this.canvas.onmouseup = function(e) {
-		_this.mouseDown = false;
-		_this.draggedEntity = null;
-	};
+		this.canvas.onmouseup = function(e) {
+			_this.mouseDown = false;
+			_this.draggedEntity = null;
+		};
 	
-	this.canvas.onmousemove = function(e) {
-		var rect = _this.canvas.getBoundingClientRect();
-		_this.mouse.x = e.clientX - rect.left;
-		_this.mouse.y = e.clientY - rect.top;
-	};  
+		this.canvas.onmousemove = function(e) {
+			var rect = _this.canvas.getBoundingClientRect();
+			_this.mouse.x = e.clientX - rect.left;
+			_this.mouse.y = e.clientY - rect.top;
+		};
+	}
 	
 	// simulation params
 	this.gravity = new Vec2(0,0.2);
