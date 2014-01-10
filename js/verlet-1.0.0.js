@@ -508,7 +508,7 @@ function VerletJS(width, height, canvas) {
 		e.preventDefault();
 	};
 	
-	if(_this.drag){
+	if(this.drag){
 		
 		this.canvas.onmousedown = function(e) {
 			_this.mouseDown = true;
